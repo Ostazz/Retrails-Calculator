@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Retries Calculator - Windows 10</title>
+
+    <style>
+
+        /* Windows 10 System Font */
+
+        body {
+
+            font-family: 'Segoe UI', SegoeUI, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+            background-color: #f2f2f2;
+
+            margin: 0;
+
+            padding: 0;
+
+            color: #000000;
+
+        }
+
+ 
+
+        /* Windows 10 Window Frame */
+
+        .window {
+
+            width: 800px;
+
+            margin: 20px auto;
+
+            background-color: #ffffff;
+
+            border: 1px solid #d6d6d6;
+
+            border-radius: 4px;
+
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            overflow: hidden;
+
+        }
+
+ 
+
+        /* Title Bar - Windows 10 Style */
+
+        .title-bar {
+
+            background-color: #0078d7;
+
+            color: white;
+
+            padding: 10px 15px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            cursor: move;
+
+        }
+
+ 
+
+        .title {
+
+            font-size: 14px;
+
+            font-weight: 400;
+
+        }
+
+ 
+
+        .window-controls {
+
+            display: flex;
+
+        }
+
+ 
+
+        .window-btn {
+
+            width: 46px;
+
+            height: 32px;
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+ 
+
+        .window-btn:hover {
+
+            background-color: rgba(255, 255, 255, 0.1);
+
+        }
+
+ 
+
+        .close-btn:hover {
+
+            background-color: #e81123;
+
+        }
+
+ 
+
+        /* Content Area */
+
+        .content {
+
+            padding: 20px;
+
+        }
+
+ 
+
+        /* Windows 10 Tabs */
+
+        .tabs {
+
+            display: flex;
+
+            border-bottom: 1px solid #d6d6d6;
+
+            margin-bottom: 20px;
+
+        }
+
+ 
+
+        .tab {
+
+            padding: 8px 16px;
+
+            background-color: #f3f3f3;
+
+            border: 1px solid #d6d6d6;
+
+            border-bottom: none;
+
+            margin-right: 4px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            border-radius: 4px 4px 0 0;
+
+        }
+
+ 
+
+        .tab.active {
+
+            background-color: white;
+
+            border-bottom: 1px solid white;
+
+            margin-bottom: -1px;
+
+            color: #0078d7;
+
+            font-weight: 600;
+
+        }
+
+ 
+
+        /* Windows 10 Input Fields */
+
+        .win-input {
+
+            width: 100%;
+
+            padding: 8px;
+
+            border: 1px solid #d6d6d6;
+
+            border-radius: 2px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+
+        }
+
+ 
+
+        .win-input:focus {
+
+            outline: none;
+
+            border-color: #0078d7;
+
+            box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.2);
+
+        }
+
+ 
+
+        /* Windows 10 Buttons */
+
+        .win-btn {
+
+            padding: 8px 16px;
+
+            border: 1px solid #d6d6d6;
+
+            background-color: #f3f3f3;
+
+            border-radius: 2px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+ 
+
+        .win-btn:hover {
+
+            background-color: #e5e5e5;
+
+        }
+
+ 
+
+        .win-btn:active {
+
+            background-color: #d6d6d6;
+
+        }
+
+ 
+
+        .win-btn-primary {
+
+            background-color: #0078d7;
+
+            color: white;
+
+            border-color: #006cbe;
+
+        }
+
+ 
+
+        .win-btn-primary:hover {
+
+            background-color: #006cbe;
+
+        }
+
+ 
+
+        .win-btn-primary:active {
+
+            background-color: #005a9e;
+
+        }
+
+ 
+
+        .win-btn i {
+
+            margin-right: 8px;
+
+        }
+
+ 
+
+        /* Results Section */
+
+        .results {
+
+            display: none;
+
+            margin-top: 20px;
+
+        }
+
+ 
+
+        .phase-card {
+
+            background-color: white;
+
+            border: 1px solid #d6d6d6;
+
+            border-radius: 2px;
+
+            margin-bottom: 10px;
+
+            overflow: hidden;
+
+        }
+
+ 
+
+        .phase-header {
+
+            background-color: #0078d7;
+
+            color: white;
+
+            padding: 8px 12px;
+
+            font-size: 14px;
+
+        }
+
+ 
+
+        .phase-content {
+
+            padding: 12px;
+
+        }
+
+ 
+
+        .phase-date {
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            margin-bottom: 4px;
+
+        }
+
+ 
+
+        .phase-desc {
+
+            font-size: 12px;
+
+            color: #666;
+
+        }
+
+ 
+
+        .connector {
+
+            position: relative;
+
+            height: 30px;
+
+            margin-left: 30px;
+
+        }
+
+ 
+
+        .connector::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 15px;
+
+            height: 100%;
+
+            width: 1px;
+
+            background-color: #d6d6d6;
+
+        }
+
+ 
+
+        .connector-icon {
+
+            position: absolute;
+
+            top: 50%;
+
+            left: 15px;
+
+            transform: translate(-50%, -50%);
+
+            background-color: white;
+
+            border: 1px solid #d6d6d6;
+
+            border-radius: 50%;
+
+            width: 24px;
+
+            height: 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 1;
+
+        }
+
+ 
+
+        .connector-icon i {
+
+            font-size: 10px;
+
+            color: #0078d7;
+
+        }
+
+ 
+
+        /* Summary Card */
+
+        .summary {
+
+            background-color: #f7f7f7;
+
+            border: 1px solid #d6d6d6;
+
+            padding: 12px;
+
+            margin-bottom: 20px;
+
+        }
+
+ 
+
+        .summary-title {
+
+            color: #0078d7;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+        }
+
+ 
+
+        .summary-title i {
+
+            margin-right: 8px;
+
+        }
+
+ 
+
+        .summary-item {
+
+            margin-bottom: 4px;
+
+            font-size: 14px;
+
+        }
+
+ 
+
+        .summary-label {
+
+            font-weight: 600;
+
+            color: #0078d7;
+
+        }
+
+ 
+
+        /* Button Group */
+
+        .btn-group {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+        }
+
+ 
+
+        .btn-group .win-btn {
+
+            flex: 1;
+
+        }
+
+ 
+
+        /* Empty State */
+
+        .empty-state {
+
+            text-align: center;
+
+            padding: 40px 20px;
+
+        }
+
+ 
+
+        .empty-icon {
+
+            width: 60px;
+
+            height: 60px;
+
+            background-color: #e5f1fb;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 0 auto 16px;
+
+            color: #0078d7;
+
+            font-size: 24px;
+
+        }
+
+ 
+
+        /* Modal */
+
+        .modal {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            bottom: 0;
+
+            background-color: rgba(0, 0, 0, 0.5);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 1000;
+
+            display: none;
+
+        }
+
+ 
+
+        .modal-content {
+
+            background-color: white;
+
+            border: 1px solid #d6d6d6;
+
+            border-radius: 4px;
+
+            width: 500px;
+
+            max-width: 90%;
+
+        }
+
+ 
+
+        .modal-header {
+
+            background-color: #0078d7;
+
+            color: white;
+
+            padding: 12px 16px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+ 
+
+        .modal-body {
+
+            padding: 16px;
+
+        }
+
+ 
+
+        .modal-footer {
+
+            padding: 12px 16px;
+
+            background-color: #f3f3f3;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+        }
+
+ 
+
+        /* Animation */
+
+        @keyframes fadeIn {
+
+            from { opacity: 0; }
+
+            to { opacity: 1; }
+
+        }
+
+ 
+
+        .fade-in {
+
+            animation: fadeIn 0.3s ease-in;
+
+        }
+
+    </style>
+
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
+
+</head>
+
+<body>
+
+    <div class="window">
+
+        <!-- Title Bar -->
+
+        <div class="title-bar">
+
+            <div class="title">Retries Calculator</div>
+
+            <div class="window-controls">
+
+                <button class="window-btn" id="minimizeBtn"><i class="fas fa-minus"></i></button>
+
+                <button class="window-btn" id="maximizeBtn"><i class="far fa-square"></i></button>
+
+                <button class="window-btn close-btn" id="closeBtn"><i class="fas fa-times"></i></button>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Content Area -->
+
+        <div class="content">
+
+            <!-- Tabs -->
+
+            <div class="tabs">
+
+                <div class="tab active" id="calcTab">Calculator</div>
+
+                <div class="tab" id="historyTab">History</div>
+
+            </div>
+
+ 
+
+            <!-- Calculator Tab -->
+
+            <div id="calculatorContent">
+
+                <div>
+
+                    <label for="renewalDate">Renewal Date</label>
+
+                    <input type="date" id="renewalDate" class="win-input">
+
+                </div>
+
+ 
+
+                <button id="calculateBtn" class="win-btn win-btn-primary">
+
+                    <i class="fas fa-calculator"></i> Calculate Retries
+
+                </button>
+
+ 
+
+                <!-- Results Section -->
+
+                <div id="results" class="results">
+
+                    <!-- Starting Date -->
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Renewal Date</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="startDateDisplay">-</div>
+
+                            <div class="phase-desc">Selected date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 1 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>1</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 1 (+1 day)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase1Display">-</div>
+
+                            <div class="phase-desc">1 day after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 2 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>4</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 2 (+4 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase2Display">-</div>
+
+                            <div class="phase-desc">4 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 3 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>9</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 3 (+9 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase3Display">-</div>
+
+                            <div class="phase-desc">9 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 4 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>15</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 4 (+15 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase4Display">-</div>
+
+                            <div class="phase-desc">15 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 5 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>30</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 5 (+30 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase5Display">-</div>
+
+                            <div class="phase-desc">30 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 6 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>45</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 6 (+45 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase6Display">-</div>
+
+                            <div class="phase-desc">45 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Phase 7 -->
+
+                    <div class="connector">
+
+                        <div class="connector-icon"><i class="fas fa-plus"></i>60</div>
+
+                    </div>
+
+                    <div class="phase-card">
+
+                        <div class="phase-header">Phase 7 (+60 days)</div>
+
+                        <div class="phase-content">
+
+                            <div class="phase-date" id="phase7Display">-</div>
+
+                            <div class="phase-desc">60 days after renewal date</div>
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Summary -->
+
+                    <div class="summary">
+
+                        <div class="summary-title">
+
+                            <i class="fas fa-clipboard-list"></i> Summary
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Renewal Date:</span> <span id="summaryStart">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 1 (+1 day):</span> <span id="summaryPhase1">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 2 (+4 days):</span> <span id="summaryPhase2">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 3 (+9 days):</span> <span id="summaryPhase3">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 4 (+15 days):</span> <span id="summaryPhase4">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 5 (+30 days):</span> <span id="summaryPhase5">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 6 (+45 days):</span> <span id="summaryPhase6">-</span>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">Phase 7 (+60 days):</span> <span id="summaryPhase7">-</span>
+
+                        </div>
+
+                        <div class="summary-item" style="border-top: 1px solid #d6d6d6; padding-top: 8px; margin-top: 8px;">
+
+                            <span class="summary-label">Total Days Span:</span> 60 days
+
+                        </div>
+
+                    </div>
+
+ 
+
+                    <!-- Action Buttons -->
+
+                    <div class="btn-group">
+
+                        <button id="shareBtn" class="win-btn">
+
+                            <i class="fas fa-share-alt"></i> Share
+
+                        </button>
+
+                        <button id="saveBtn" class="win-btn win-btn-primary">
+
+                            <i class="fas fa-save"></i> Save
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+ 
+
+            <!-- History Tab -->
+
+            <div id="historyContent" style="display: none;">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="fas fa-history"></i>
+
+                    </div>
+
+                    <h3>No History Yet</h3>
+
+                    <p>Your calculation history will appear here</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+ 
+
+    <!-- Info Modal -->
+
+    <div class="modal" id="infoModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div>About Retries Calculator</div>
+
+                <button id="closeModalBtn" class="window-btn"><i class="fas fa-times"></i></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>This app calculates a sequence of retry dates based on your renewal date:</p>
+
+                <ul style="list-style-type: disc; padding-left: 20px; margin-top: 8px; margin-bottom: 8px;">
+
+                    <li>Phase 1: +1 day from renewal date</li>
+
+                    <li>Phase 2: +4 days from renewal date</li>
+
+                    <li>Phase 3: +9 days from renewal date</li>
+
+                    <li>Phase 4: +15 days from renewal date</li>
+
+                    <li>Phase 5: +30 days from renewal date</li>
+
+                    <li>Phase 6: +45 days from renewal date</li>
+
+                    <li>Phase 7: +60 days from renewal date</li>
+
+                </ul>
+
+                <p>Perfect for planning retry attempts for renewals or follow-ups.</p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button id="okBtn" class="win-btn win-btn-primary">OK</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+ 
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Set default date to today
+
+            const today = new Date();
+
+            const formattedToday = today.toISOString().split('T')[0];
+
+            document.getElementById('renewalDate').value = formattedToday;
+
+ 
+
+            // Tab switching
+
+            document.getElementById('calcTab').addEventListener('click', function() {
+
+                document.getElementById('calcTab').classList.add('active');
+
+                document.getElementById('historyTab').classList.remove('active');
+
+                document.getElementById('calculatorContent').style.display = 'block';
+
+                document.getElementById('historyContent').style.display = 'none';
+
+            });
+
+ 
+
+            document.getElementById('historyTab').addEventListener('click', function() {
+
+                document.getElementById('historyTab').classList.add('active');
+
+                document.getElementById('calcTab').classList.remove('active');
+
+                document.getElementById('historyContent').style.display = 'block';
+
+                document.getElementById('calculatorContent').style.display = 'none';
+
+            });
+
+ 
+
+            // Calculate button
+
+            document.getElementById('calculateBtn').addEventListener('click', function() {
+
+                const startDate = new Date(document.getElementById('renewalDate').value);
+
+               
+
+                if (isNaN(startDate.getTime())) {
+
+                    alert('Please select a valid date');
+
+                    return;
+
+                }
+
+               
+
+                // Define the days to add for each phase
+
+                const daysToAdd = [1, 4, 9, 15, 30, 45, 60];
+
+               
+
+                // Calculate phases
+
+                const phaseDates = daysToAdd.map(days => {
+
+                    const date = new Date(startDate);
+
+                    date.setDate(startDate.getDate() + days);
+
+                    return date;
+
+                });
+
+               
+
+                // Format dates for display
+
+                const formatDate = (date) => {
+
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+                    return date.toLocaleDateString('en-US', options);
+
+                };
+
+               
+
+                const formatShortDate = (date) => {
+
+                    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+
+                    return date.toLocaleDateString('en-US', options);
+
+                };
+
+               
+
+                // Update display
+
+                document.getElementById('startDateDisplay').textContent = formatShortDate(startDate);
+
+               
+
+                for (let i = 0; i < phaseDates.length; i++) {
+
+                    document.getElementById(`phase${i+1}Display`).textContent = formatShortDate(phaseDates[i]);
+
+                }
+
+               
+
+                // Update summary
+
+                document.getElementById('summaryStart').innerHTML = `<span class="summary-label">Renewal Date:</span> ${formatDate(startDate)}`;
+
+               
+
+                for (let i = 0; i < phaseDates.length; i++) {
+
+                    document.getElementById(`summaryPhase${i+1}`).innerHTML =
+
+                        `<span class="summary-label">Phase ${i+1} (+${daysToAdd[i]} day${daysToAdd[i] > 1 ? 's' : ''}):</span> ${formatDate(phaseDates[i])}`;
+
+                }
+
+               
+
+                // Show results with animation
+
+                const results = document.getElementById('results');
+
+                results.style.display = 'block';
+
+                results.classList.add('fade-in');
+
+            });
+
+ 
+
+            // Modal controls
+
+            document.getElementById('minimizeBtn').addEventListener('click', function() {
+
+                alert('Minimize functionality would be implemented here');
+
+            });
+
+ 
+
+            document.getElementById('maximizeBtn').addEventListener('click', function() {
+
+                alert('Maximize functionality would be implemented here');
+
+            });
+
+ 
+
+            document.getElementById('closeBtn').addEventListener('click', function() {
+
+                alert('Close functionality would be implemented here');
+
+            });
+
+ 
+
+            // Info button
+
+            document.getElementById('calculateBtn').addEventListener('click', function() {
+
+                document.getElementById('results').style.display = 'block';
+
+            });
+
+ 
+
+            // Info button
+
+            document.addEventListener('keydown', function(e) {
+
+                if (e.key === 'F1') {
+
+                    document.getElementById('infoModal').style.display = 'flex';
+
+                }
+
+            });
+
+ 
+
+            document.getElementById('closeModalBtn').addEventListener('click', function() {
+
+                document.getElementById('infoModal').style.display = 'none';
+
+            });
+
+ 
+
+            document.getElementById('okBtn').addEventListener('click', function() {
+
+                document.getElementById('infoModal').style.display = 'none';
+
+            });
+
+ 
+
+            // Share button
+
+            document.getElementById('shareBtn').addEventListener('click', function() {
+
+                alert('Sharing functionality would be implemented here');
+
+            });
+
+ 
+
+            // Save button
+
+            document.getElementById('saveBtn').addEventListener('click', function() {
+
+                const saveBtn = document.getElementById('saveBtn');
+
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
+
+                saveBtn.classList.add('win-btn-primary');
+
+               
+
+                setTimeout(() => {
+
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+
+                }, 2000);
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
